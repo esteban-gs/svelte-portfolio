@@ -1,0 +1,14 @@
+# targetNamespace: ''
+# parameters: {}
+packages:
+  - name: portfoliocms
+    actions:
+      - name: profile
+        runtime: 'nodejs:default'
+        environment:
+          PROFILE_NAME: "${PROFILE_NAME}"
+          LINKED_IN_URL: "${LINKED_IN_URL}"
+          PROFILE_IMAGE: "${PROFILE_IMAGE}"
+          GITHUB_URL: "${GITHUB_URL}"
+          LOCATION: "${LOCATION}"
+          PROFILE_BACKGROUND_IMG: "${PROFILE_BACKGROUND_IMG}"

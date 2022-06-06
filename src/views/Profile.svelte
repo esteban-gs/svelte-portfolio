@@ -3,7 +3,28 @@
   import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
 
-  const team2 = "/assets/img/team-2-800x800.jpg";
+  import { writable } from 'svelte/store';
+  import { onMount } from 'svelte';
+
+  const profileName = writable("");
+  const profileImg = writable("");
+  const profileLocation = writable("");
+  const profileBackgroundImg = writable("");
+
+  onMount(async () => {
+  fetch("/data/profile.json")
+  .then(response => response.json())
+  .then(data => {
+		console.log(data);
+    profileName.set(data.name);
+    profileImg.set(data.profileImage);
+    profileLocation.set(data.location);
+    profileBackgroundImg.set(data.profileBackgroundImg);
+  }).catch(error => {
+    console.log(error);
+    return [];
+  });
+});
   export let location;
 </script>
 
@@ -14,7 +35,7 @@
       <div
         class="absolute top-0 w-full h-full bg-center bg-cover"
         style="
-          background-image: url(https://images.unsplash.com/photo-1499336315816-097655dcfbda?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2710&q=80);
+          background-image: url({$profileBackgroundImg});
         "
       >
         <span
@@ -53,7 +74,7 @@
                 <div class="relative">
                   <img
                     alt="..."
-                    src="{team2}"
+                    src="{$profileImg}"
                     class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
                   />
                 </div>
@@ -103,13 +124,13 @@
               <h3
                 class="text-4xl font-semibold leading-normal mb-2 text-blueGray-700 mb-2"
               >
-                Jenna Stones
+                {$profileName}
               </h3>
               <div
                 class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
               >
                 <i class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
-                Los Angeles, California
+                {$profileLocation}
               </div>
               <div class="mb-2 text-blueGray-600 mt-10">
                 <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
