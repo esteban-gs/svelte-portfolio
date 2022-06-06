@@ -2,9 +2,10 @@
   // core components
   import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
+  import {APP_CMS} from "../app-configs";
 
-  import { writable } from 'svelte/store';
-  import { onMount } from 'svelte';
+  import { writable } from "svelte/store";
+  import { onMount } from "svelte";
 
   const profileName = writable("");
   const profileImg = writable("");
@@ -12,19 +13,20 @@
   const profileBackgroundImg = writable("");
 
   onMount(async () => {
-  fetch("/data/profile.json")
-  .then(response => response.json())
-  .then(data => {
-		console.log(data);
-    profileName.set(data.name);
-    profileImg.set(data.profileImage);
-    profileLocation.set(data.location);
-    profileBackgroundImg.set(data.profileBackgroundImg);
-  }).catch(error => {
-    console.log(error);
-    return [];
+    fetch(APP_CMS)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        profileName.set(data.profileName);
+        profileImg.set(data.profileImage);
+        profileLocation.set(data.location);
+        profileBackgroundImg.set(data.profileBackgroundImg);
+      })
+      .catch((error) => {
+        console.log(error);
+        return [];
+      });
   });
-});
   export let location;
 </script>
 
@@ -41,7 +43,7 @@
         <span
           id="blackOverlay"
           class="w-full h-full absolute opacity-50 bg-black"
-        ></span>
+        />
       </div>
       <div
         class="top-auto bottom-0 left-0 right-0 w-full absolute pointer-events-none overflow-hidden h-70-px"
@@ -59,7 +61,7 @@
           <polygon
             class="text-blueGray-200 fill-current"
             points="2560 0 2560 100 0 100"
-          ></polygon>
+          />
         </svg>
       </div>
     </section>
@@ -74,7 +76,7 @@
                 <div class="relative">
                   <img
                     alt="..."
-                    src="{$profileImg}"
+                    src={$profileImg}
                     class="shadow-xl rounded-full h-auto align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-150-px"
                   />
                 </div>
@@ -129,15 +131,17 @@
               <div
                 class="text-sm leading-normal mt-0 mb-2 text-blueGray-400 font-bold uppercase"
               >
-                <i class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"></i>
+                <i
+                  class="fas fa-map-marker-alt mr-2 text-lg text-blueGray-400"
+                />
                 {$profileLocation}
               </div>
               <div class="mb-2 text-blueGray-600 mt-10">
-                <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400"></i>
+                <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400" />
                 Solution Manager - Creative Tim Officer
               </div>
               <div class="mb-2 text-blueGray-600">
-                <i class="fas fa-university mr-2 text-lg text-blueGray-400"></i>
+                <i class="fas fa-university mr-2 text-lg text-blueGray-400" />
                 University of Computer Science
               </div>
             </div>
