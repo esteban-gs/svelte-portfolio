@@ -1,4 +1,4 @@
 node_modules
 build
 public/**.html
-public/200.html
+public/*.html
