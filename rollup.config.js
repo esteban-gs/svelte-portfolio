@@ -63,7 +63,7 @@ const indexTemplate = `<!--
         var process = { env: {<<process-env-status>>} };
       }
     </script>
-    <script defer src="<<live-preview-link>>/build/bundle.js"></script>
+    <script defer src="<<live-preview-link>>build/bundle.js"></script>
   </head>
 
   <body class="text-blueGray-700 antialiased">
