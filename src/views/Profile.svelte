@@ -2,7 +2,7 @@
   // core components
   import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
-  import {APP_CMS} from "../app-configs";
+  import { APP_CMS } from "../app-configs";
 
   import { writable } from "svelte/store";
   import { onMount } from "svelte";
