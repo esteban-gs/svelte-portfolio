@@ -2,36 +2,50 @@
   // core components
   import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
-  import { APP_CMS } from "../app-configs";
+  import { APP_CMS, GITHUB_BASE_URL } from "../app-configs";
+  import axios from "axios";
 
   import { writable } from "svelte/store";
   import { onMount } from "svelte";
+  import { each } from "svelte/internal";
+
+  const authLinks = {
+    githubUrl: "",
+    linkedInUrl: "",
+  };
 
   const profileName = writable("");
   const profileImg = writable("");
   const profileLocation = writable("");
   const profileBackgroundImg = writable("");
 
+  let githubMetrics = [];
+
   onMount(async () => {
-    fetch(APP_CMS)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        profileName.set(data.profileName);
-        profileImg.set(data.profileImage);
-        profileLocation.set(data.location);
-        profileBackgroundImg.set(data.profileBackgroundImg);
-      })
-      .catch((error) => {
-        console.log(error);
-        return [];
-      });
+    const profile = (await axios.get(APP_CMS)).data;
+
+    profileName.set(profile.profileName);
+    profileImg.set(profile.profileImage);
+    profileLocation.set(profile.location);
+    profileBackgroundImg.set(profile.profileBackgroundImg);
+
+    authLinks.githubUrl = profile.githubUrl;
+    authLinks.linkedInUrl = profile.linkedInUrl;
+
+    const { public_repos, following, followers } = profile.githubProfile;
+
+    githubMetrics = [
+      { name: "Repos", count: public_repos },
+      { name: "Following", count: following },
+      { name: "Followers", count: followers },
+    ];
   });
+
   export let location;
 </script>
 
 <div>
-  <AuthNavbar />
+  <AuthNavbar {...authLinks} />
   <main class="profile-page">
     <section class="relative block h-500-px">
       <div
@@ -95,30 +109,19 @@
               </div>
               <div class="w-full lg:w-4/12 px-4 lg:order-1">
                 <div class="flex justify-center py-4 lg:pt-4 pt-8">
-                  <div class="mr-4 p-3 text-center">
-                    <span
-                      class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >
-                      22
-                    </span>
-                    <span class="text-sm text-blueGray-400">Friends</span>
-                  </div>
-                  <div class="mr-4 p-3 text-center">
-                    <span
-                      class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >
-                      10
-                    </span>
-                    <span class="text-sm text-blueGray-400">Photos</span>
-                  </div>
-                  <div class="lg:mr-4 p-3 text-center">
-                    <span
-                      class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
-                    >
-                      89
-                    </span>
-                    <span class="text-sm text-blueGray-400">Comments</span>
-                  </div>
+                  {#each githubMetrics as { name, count }}
+                    <div class="mr-4 p-3 text-center">
+                      <span
+                        class="text-xl font-bold block uppercase tracking-wide text-blueGray-600"
+                      >
+                        {count}
+                      </span>
+                      <i
+                      class="lg:text-blueGray-200 text-blueGray-400 fab fa-github text-lg leading-lg"
+                    />
+                      <span class="text-sm text-blueGray-400">{name}</span>
+                    </div>
+                  {/each}
                 </div>
               </div>
             </div>
