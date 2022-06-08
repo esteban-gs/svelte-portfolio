@@ -2,7 +2,7 @@
   // core components
   import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
-  import { APP_CMS, GITHUB_BASE_URL } from "../app-configs";
+  import { APP_CMS, RECAPTCHA_KEY } from "../app-configs";
   import axios from "axios";
 
   import { writable } from "svelte/store";
@@ -20,6 +20,8 @@
   const profileBackgroundImg = writable("");
 
   let githubMetrics = [];
+
+  let error;
 
   onMount(async () => {
     const profile = (await axios.get(APP_CMS)).data;
@@ -39,6 +41,10 @@
       { name: "Following", count: following },
       { name: "Followers", count: followers },
     ];
+
+    window.grecaptcha.render("my_form", {
+      sitekey: RECAPTCHA_KEY,
+    });
   });
 
   export let location;
@@ -47,6 +53,7 @@
 <div>
   <AuthNavbar {...authLinks} />
   <main class="profile-page">
+    <div id="my_form" />
     <section class="relative block h-500-px">
       <div
         class="absolute top-0 w-full h-full bg-center bg-cover"
@@ -117,8 +124,8 @@
                         {count}
                       </span>
                       <i
-                      class="lg:text-blueGray-200 text-blueGray-400 fab fa-github text-lg leading-lg"
-                    />
+                        class="lg:text-blueGray-200 text-blueGray-400 fab fa-github text-lg leading-lg"
+                      />
                       <span class="text-sm text-blueGray-400">{name}</span>
                     </div>
                   {/each}
