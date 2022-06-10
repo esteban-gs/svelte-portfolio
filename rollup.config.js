@@ -64,6 +64,19 @@ const indexTemplate = `<!--
       }
     </script>
     <script defer src="<<live-preview-link>>build/bundle.js"></script>
+
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+      (function(){
+          emailjs.init("YOUR_PUBLIC_KEY");
+      })();
+    </script>
+
+    <style>
+      .grecaptcha-badge { visibility: hidden; }
+    </style>
   </head>
 
   <body class="text-blueGray-700 antialiased">

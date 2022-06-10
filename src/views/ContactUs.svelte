@@ -1,22 +1,41 @@
 <script>
   import { onMount } from "svelte";
   import { RECAPTCHA_KEY } from "../app-configs";
+  import emailjs from "emailjs";
 
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
+  let widget;
+  let response;
+
   const renderReCaptcha = () => {
-    window.grecaptcha.render(RECAPTCHA_FORM_ID, {
+    emailjs.init("T-C_2mFH9PGbzaNW1");
+    widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
       sitekey: RECAPTCHA_KEY,
+      theme: "dark",
     });
+  };
+
+  const handleRecaptchaResponse = () => {
+    response = window.grecaptcha.getResponse(widget);
+    console.log(response, "recaptcha response");
+    sendEmailJS(response);
+  };
+
+  const sendEmailJS = (recaptchaToken) => {
+    emailjs
+      .send(
+        "service_p5xbtyf",
+        "template_6db4jh8",
+        { from_name: "test", "g-recaptcha-response": recaptchaToken },
+        "T-C_2mFH9PGbzaNW1"
+      )
+      .then((x) => console.log(x));
   };
 </script>
 
-
 <svelte:window on:load={renderReCaptcha} />
 
-<style>
-  .grecaptcha-badge { visibility: hidden; }
-</style>
 <div>
   <main>
     <section class="relative block py-24 lg:pt-30 bg-blueGray-800">
@@ -81,6 +100,7 @@
                 </div>
                 <div class="text-center mt-6">
                   <button
+                    on:click={handleRecaptchaResponse}
                     class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                     type="button"
                   >
