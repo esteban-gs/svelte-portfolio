@@ -1,6 +1,8 @@
 <!-- App.svelte -->
 <script>
   import { Router, Route } from "svelte-routing";
+  import ContactUs from "./views/ContactUs.svelte";
+  import AuthNavbar from "./components/Navbars/AuthNavbar.svelte";
 
   // Admin Layout
   // import Admin from "./layouts/Admin.svelte";
@@ -15,13 +17,15 @@
   export let url = "";
 </script>
 
-<Router url="{url}">
+<AuthNavbar />
+<Router {url}>
   <!-- admin layout -->
   <!-- <Route path="admin/*admin" component="{Admin}" /> -->
   <!-- auth layout -->
   <!-- <Route path="auth/*auth" component="{Auth}" /> -->
   <!-- no layout pages -->
   <!-- <Route path="landing" component="{Landing}" /> -->
-  <Route path="/" component="{Profile}" />
+  <Route path="/" component={Profile} />
+  <Route path="/work-with-me" component={ContactUs} />
   <!-- <Route path="/" component="{Index}" /> -->
 </Router>

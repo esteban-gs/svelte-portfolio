@@ -1,13 +1,11 @@
 <script>
   // core components
-  import AuthNavbar from "components/Navbars/AuthNavbar.svelte";
   import Footer from "components/Footers/Footer.svelte";
-  import { APP_CMS, RECAPTCHA_KEY } from "../app-configs";
+  import { APP_CMS } from "../app-configs";
   import axios from "axios";
 
   import { writable } from "svelte/store";
   import { onMount } from "svelte";
-  import { each } from "svelte/internal";
 
   const authLinks = {
     githubUrl: "",
@@ -20,8 +18,6 @@
   const profileBackgroundImg = writable("");
 
   let githubMetrics = [];
-
-  let error;
 
   onMount(async () => {
     const profile = (await axios.get(APP_CMS)).data;
@@ -41,19 +37,13 @@
       { name: "Following", count: following },
       { name: "Followers", count: followers },
     ];
-
-    window.grecaptcha.render("my_form", {
-      sitekey: RECAPTCHA_KEY,
-    });
   });
 
   export let location;
 </script>
 
 <div>
-  <AuthNavbar {...authLinks} />
   <main class="profile-page">
-    <div id="my_form" />
     <section class="relative block h-500-px">
       <div
         class="absolute top-0 w-full h-full bg-center bg-cover"
