@@ -68,11 +68,6 @@ const indexTemplate = `<!--
     <script type="text/javascript"
         src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js">
     </script>
-    <script type="text/javascript">
-      (function(){
-          emailjs.init("YOUR_PUBLIC_KEY");
-      })();
-    </script>
 
     <style>
       .grecaptcha-badge { visibility: hidden; }
@@ -87,7 +82,7 @@ const indexTemplate = `<!--
       >
     </noscript>
     <div id="app"></div>
-    <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit"
+    <script src="https://www.google.com/recaptcha/api.js"
       async defer>
     </script>
   </body>
