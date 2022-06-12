@@ -82,7 +82,7 @@
               class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200"
             >
               <form
-                on:change={handleRecaptchaResponse}
+                on:keypress={handleRecaptchaResponse}
                 on:submit|preventDefault={handleSubmit}
               >
                 <div class="flex-auto p-5 lg:p-10">
@@ -169,7 +169,7 @@
                     {/if}
                   </div>
                   <div class="text-center mt-6">
-                    <div id={RECAPTCHA_FORM_ID} style="width: auto;" />
+                    <div id={RECAPTCHA_FORM_ID} data-callback={handleRecaptchaResponse} />
                   </div>
                   <div class="text-center mt-6">
                     <button
