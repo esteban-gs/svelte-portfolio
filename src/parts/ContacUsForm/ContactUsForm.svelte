@@ -176,11 +176,11 @@
                       </span>
                     {/if}
                   </div>
-                  <div
-                    class="text-center mt-6"
-                    on:pointerover={handleRecaptchaResponse}
-                  >
-                    <div id={RECAPTCHA_FORM_ID} />
+                  <div class="text-center mt-6">
+                    <div
+                      id={RECAPTCHA_FORM_ID}
+                      on:pointerout={handleRecaptchaResponse}
+                    />
                   </div>
                   <div class="text-center mt-6">
                     <button
