@@ -5,22 +5,38 @@
     EMAIL_JS_SERVICE_ID,
   } from "app-configs";
   import emailjs from "emailjs";
-  import { schema } from "./ContactUsFormValidators";
+  // import { schema } from "./ContactUsFormValidators";
 
   import { createForm } from "svelte-forms-lib";
+
+  import * as yup from "yup";
 
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
   let widget;
   let recaptchaVerifyResponse = "";
-  let fields = { fullName: "", email: "", message: "" };
+  let fields = { fullName: "", email: "", message: "", recaptcha: "" };
   let submittedValues;
 
-  const { form, errors, handleChange, handleSubmit } = createForm({
+  const schema = yup.object().shape({
+    fullName: yup.string().required("Full name is required"),
+    email: yup
+      .string()
+      .required("Email name is required")
+      .email("Email is invalid"),
+    message: yup.string().required("Message name is required"),
+  });
+
+  const recaptchaSchema = yup.object().shape({
+    recaptcha: yup
+      .bool()
+      .test("is valid", "Challenge not passed", (value) => value.success),
+  });
+
+  const { form, errors, state, handleChange, handleSubmit } = createForm({
     initialValues: fields,
     validationSchema: schema,
-    onSubmit: () => onSubmit(),
-    onchange: () => handleRecaptchaResponse(),
+    onSubmit: (values) => onSubmit(values),
   });
 
   const onSubmit = (values) => {
@@ -37,6 +53,7 @@
 
   const handleRecaptchaResponse = () => {
     recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
+    recaptchaSchema.isValidSync({ recaptcha: recaptchaVerifyResponse });
     console.log(recaptchaVerifyResponse, "recaptcha response");
   };
 
@@ -64,7 +81,10 @@
             <div
               class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200"
             >
-              <form on:submit|preventDefault={handleSubmit}>
+              <form
+                on:change={handleRecaptchaResponse}
+                on:submit|preventDefault={handleSubmit}
+              >
                 <div class="flex-auto p-5 lg:p-10">
                   <h4 class="text-2xl font-semibold">Want to hire me?</h4>
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
@@ -155,7 +175,7 @@
                     <button
                       class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="submit"
-                      disabled={$errors && !!!recaptchaVerifyResponse["success"]}
+                      disabled={$errors}
                     >
                       Send Message
                     </button>
