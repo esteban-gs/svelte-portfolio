@@ -11,6 +11,7 @@ import { terser } from "rollup-plugin-terser";
 import alias from "@rollup/plugin-alias";
 import fs from "fs";
 
+import css from "rollup-plugin-import-css";
 const production = !process.env.ROLLUP_WATCH;
 
 // configure aliases for absolute imports
@@ -18,8 +19,10 @@ const aliases = alias({
   resolve: [".svelte", ".js"], //optional, by default this will just look for .js files or folders
   entries: [
     { find: "components", replacement: "src/components" },
+    { find: "parts", replacement: "src/parts" },
     { find: "views", replacement: "src/views" },
     { find: "assets", replacement: "src/assets" },
+    { find: "app-configs", replacement: "src/app-configs.js" },
   ],
 });
 
@@ -47,6 +50,7 @@ const indexTemplate = `<!--
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow">
 
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon.png" />
@@ -172,7 +176,7 @@ export default {
         css.write("bundle.css");
       },
     }),
-
+    css(),
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
     // some cases you'll need additional configuration -
