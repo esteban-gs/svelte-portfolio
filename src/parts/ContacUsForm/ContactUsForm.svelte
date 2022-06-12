@@ -53,7 +53,9 @@
 
   const handleRecaptchaResponse = () => {
     recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
-    const recaptchaIsValid = recaptchaSchema.isValidSync({ recaptcha: recaptchaVerifyResponse });
+    const recaptchaIsValid = recaptchaSchema.isValidSync({
+      recaptcha: recaptchaVerifyResponse,
+    });
     console.log(recaptchaVerifyResponse, "recaptcha response");
   };
 
@@ -68,6 +70,10 @@
       )
       .then((_) => console.log(_));
   };
+
+  onMount(() => {
+    window.handleRecaptchaResponse = handleRecaptchaResponse;
+  });
 </script>
 
 <svelte:window on:load={renderReCaptcha} />
@@ -169,7 +175,10 @@
                     {/if}
                   </div>
                   <div class="text-center mt-6">
-                    <div id={RECAPTCHA_FORM_ID} data-callback={handleRecaptchaResponse} />
+                    <div
+                      id={RECAPTCHA_FORM_ID}
+                      data-callback={handleRecaptchaResponse}
+                    />
                   </div>
                   <div class="text-center mt-6">
                     <button
