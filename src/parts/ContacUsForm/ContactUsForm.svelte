@@ -12,23 +12,21 @@
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
   let widget;
-  let recaptchaVerifyResponse;
+  let recaptchaVerifyResponse = "";
   let fields = { fullName: "", email: "", message: "" };
   let submittedValues;
-
-  const onSubmit = (values) => {
-    console.log("valuesSubmitted: ===>", values);
-    handleRecaptchaResponse();
-    if (!errors) {
-      sendEmailJS(response);
-    }
-  };
 
   const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues: fields,
     validationSchema: schema,
-    onSubmit: onSubmit,
+    onSubmit: () => onSubmit(),
+    onchange: () => handleRecaptchaResponse(),
   });
+
+  const onSubmit = (values) => {
+    console.log("valuesSubmitted: ===>", values);
+    sendEmailJS(recaptchaVerifyResponse);
+  };
 
   const renderReCaptcha = () => {
     widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
@@ -56,6 +54,7 @@
 </script>
 
 <svelte:window on:load={renderReCaptcha} />
+{JSON.stringify($errors)}
 <div>
   <main>
     <section class="relative block py-24 lg:pt-30 bg-blueGray-800">
@@ -67,7 +66,7 @@
             >
               <form on:submit|preventDefault={handleSubmit}>
                 <div class="flex-auto p-5 lg:p-10">
-                  <h4 class="text-2xl font-semibold">Want to work with me?</h4>
+                  <h4 class="text-2xl font-semibold">Want to hire me?</h4>
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
                     Complete this form and I will get back to you in 24 hours.
                   </p>
@@ -156,7 +155,7 @@
                     <button
                       class="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
                       type="submit"
-                      disabled={$errors && !recaptchaVerifyResponse}
+                      disabled={$errors && !!!recaptchaVerifyResponse["success"]}
                     >
                       Send Message
                     </button>
@@ -170,9 +169,3 @@
     </section>
   </main>
 </div>
-
-<style>
-  .invalid {
-    border-color: red !important;
-  }
-</style>
