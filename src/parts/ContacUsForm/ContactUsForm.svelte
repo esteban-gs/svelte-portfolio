@@ -53,11 +53,15 @@
   };
 
   const handleRecaptchaResponse = () => {
-    recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
-    const recaptchaIsValid = recaptchaSchema.isValidSync({
-      recaptcha: recaptchaVerifyResponse,
-    });
-    console.log(recaptchaVerifyResponse, "recaptcha response");
+    let timer;
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
+      const recaptchaIsValid = recaptchaSchema.isValidSync({
+        recaptcha: recaptchaVerifyResponse,
+      });
+      console.log(recaptchaVerifyResponse, "recaptcha response");
+    }, 750);
   };
 
   const sendEmailJS = (recaptchaToken) => {
@@ -88,10 +92,7 @@
             <div
               class="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded-lg bg-blueGray-200"
             >
-              <form
-                on:keypress={handleRecaptchaResponse}
-                on:submit|preventDefault={handleSubmit}
-              >
+              <form on:submit|preventDefault={handleSubmit}>
                 <div class="flex-auto p-5 lg:p-10">
                   <h4 class="text-2xl font-semibold">Want to hire me?</h4>
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
@@ -175,11 +176,11 @@
                       </span>
                     {/if}
                   </div>
-                  <div class="text-center mt-6">
-                    <div
-                      id={RECAPTCHA_FORM_ID}
-                      data-callback={handleRecaptchaResponse}
-                    />
+                  <div
+                    class="text-center mt-6"
+                    on:pointerover={handleRecaptchaResponse}
+                  >
+                    <div id={RECAPTCHA_FORM_ID} />
                   </div>
                   <div class="text-center mt-6">
                     <button
