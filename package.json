@@ -32,8 +32,11 @@
     "@tailwindcss/forms": "0.2.1",
     "axios": "^0.27.2",
     "chart.js": "2.9.4",
+    "rollup-plugin-import-css": "^3.0.3",
     "sirv-cli": "1.0.11",
+    "svelte-forms-lib": "^2.0.1",
     "svelte-routing": "1.5.0",
-    "tailwindcss": "2.0.4"
+    "tailwindcss": "2.0.4",
+    "yup": "^0.32.11"
   }
 }
