@@ -3,6 +3,7 @@
     RECAPTCHA_KEY,
     EMAIL_JS_KEY,
     EMAIL_JS_SERVICE_ID,
+    EMAIL_JS_TEMPLATE_ID
   } from "app-configs";
   import emailjs from "emailjs";
   import { schema } from "./ContactUsFormValidators";
