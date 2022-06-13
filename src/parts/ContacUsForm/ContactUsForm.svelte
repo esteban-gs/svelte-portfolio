@@ -8,18 +8,13 @@
   import emailjs from "emailjs";
   import { schema } from "./ContactUsFormValidators";
   import { recaptchaSchema } from "./RecaptchaValidator";
-
   import { createForm } from "svelte-forms-lib";
-  import { onMount } from "svelte";
-
-  import * as yup from "yup";
 
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
   let widget;
   let recaptchaVerifyResponse = "";
-  let fields = { fullName: "", email: "", message: "" };
-  let submittedValues;
+  let fields = { fullName: "", email: "", message: "", recaptcha: "" };
 
   const renderReCaptcha = () => {
     widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
@@ -181,7 +176,6 @@
                     >
                       Send Message
                     </button>
-                    {JSON.stringify($form)}
                   </div>
                 </div>
               </form>
