@@ -68,7 +68,6 @@
 </script>
 
 <svelte:window on:load={renderReCaptcha} />
-{JSON.stringify($errors)}
 <div>
   <main>
     <section class="relative block py-24 lg:pt-30 bg-blueGray-800">
