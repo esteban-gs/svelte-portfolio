@@ -20,6 +20,13 @@
   let fields = { fullName: "", email: "", message: "" };
   let submittedValues;
 
+  const renderReCaptcha = () => {
+    widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
+      sitekey: RECAPTCHA_KEY,
+      theme: "dark",
+    });
+  };
+
   const validateRecaptcha = async () => {
     let errs = {};
 
@@ -48,23 +55,16 @@
 
   const handleOnSubmit = (values) => {
     console.log("valuesSubmitted: ===>", values);
-    sendEmailJS(recaptchaVerifyResponse);
+    sendEmailJS(recaptchaVerifyResponse, values);
   };
 
-  const renderReCaptcha = () => {
-    widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
-      sitekey: RECAPTCHA_KEY,
-      theme: "dark",
-    });
-  };
-
-  const sendEmailJS = (recaptchaToken) => {
+  const sendEmailJS = (recaptchaToken, values) => {
     emailjs.init(EMAIL_JS_KEY);
     emailjs
       .send(
         EMAIL_JS_SERVICE_ID,
         EMAIL_JS_TEMPLATE_ID,
-        { ...submittedValues, "g-recaptcha-response": recaptchaToken },
+        { ...values, "g-recaptcha-response": recaptchaToken },
         EMAIL_JS_KEY
       )
       .then((_) => console.log(_));
