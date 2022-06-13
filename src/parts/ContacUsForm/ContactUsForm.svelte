@@ -5,10 +5,11 @@
     EMAIL_JS_SERVICE_ID,
   } from "app-configs";
   import emailjs from "emailjs";
-  // import { schema } from "./ContactUsFormValidators";
-  import { onMount } from "svelte";
+  import { schema } from "./ContactUsFormValidators";
+  import { recaptchaSchema } from "./RecaptchaValidator";
 
   import { createForm } from "svelte-forms-lib";
+  import { onMount } from "svelte";
 
   import * as yup from "yup";
 
@@ -16,31 +17,36 @@
 
   let widget;
   let recaptchaVerifyResponse = "";
-  let fields = { fullName: "", email: "", message: "", recaptcha: "" };
+  let fields = { fullName: "", email: "", message: "" };
   let submittedValues;
 
-  const schema = yup.object().shape({
-    fullName: yup.string().required("Full name is required"),
-    email: yup
-      .string()
-      .required("Email name is required")
-      .email("Email is invalid"),
-    message: yup.string().required("Message name is required"),
-  });
+  const validateRecaptcha = async () => {
+    let errs = {};
 
-  const recaptchaSchema = yup.object().shape({
-    recaptcha: yup
-      .bool()
-      .test("is valid", "Challenge not passed", (value) => value.success),
-  });
+    recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
+    if (!recaptchaVerifyResponse) {
+      errs["recaptcha"] = "Unable to validate";
+    } else {
+      console.log(recaptchaVerifyResponse, "recap verify response");
+      const recaptchaIsValid = await recaptchaSchema.validate({
+        recaptchaVerifyResponse,
+      });
+      console.log(recaptchaIsValid, "recap is valid");
+      if (!recaptchaIsValid) {
+        errs["recaptcha"] = "Unable to validate";
+      }
+    }
+    return errs;
+  };
 
   const { form, errors, state, handleChange, handleSubmit } = createForm({
     initialValues: fields,
     validationSchema: schema,
-    onSubmit: (values) => onSubmit(values),
+    validate: validateRecaptcha,
+    onSubmit: (values) => handleOnSubmit(values),
   });
 
-  const onSubmit = (values) => {
+  const handleOnSubmit = (values) => {
     console.log("valuesSubmitted: ===>", values);
     sendEmailJS(recaptchaVerifyResponse);
   };
@@ -50,18 +56,6 @@
       sitekey: RECAPTCHA_KEY,
       theme: "dark",
     });
-  };
-
-  const handleRecaptchaResponse = () => {
-    let timer;
-    clearTimeout(timer);
-    timer = setTimeout(() => {
-      recaptchaVerifyResponse = window.grecaptcha.getResponse(widget);
-      const recaptchaIsValid = recaptchaSchema.isValidSync({
-        recaptcha: recaptchaVerifyResponse,
-      });
-      console.log(recaptchaVerifyResponse, "recaptcha response");
-    }, 750);
   };
 
   const sendEmailJS = (recaptchaToken) => {
@@ -75,10 +69,6 @@
       )
       .then((_) => console.log(_));
   };
-
-  onMount(() => {
-    window.handleRecaptchaResponse = handleRecaptchaResponse;
-  });
 </script>
 
 <svelte:window on:load={renderReCaptcha} />
@@ -109,7 +99,6 @@
                       id="fullName"
                       type="text"
                       name="fullName"
-                      on:change={handleChange}
                       on:keyup={handleChange}
                       bind:value={$form.fullName}
                       class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -135,7 +124,6 @@
                       id="email"
                       type="text"
                       name="email"
-                      on:change={handleChange}
                       on:keyup={handleChange}
                       bind:value={$form.email}
                       class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -162,7 +150,6 @@
                       name="message"
                       rows="4"
                       cols="80"
-                      on:change={handleChange}
                       on:keyup={handleChange}
                       bind:value={$form.message}
                       class="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full"
@@ -176,11 +163,15 @@
                       </span>
                     {/if}
                   </div>
-                  <div class="text-center mt-6">
-                    <div
-                      id={RECAPTCHA_FORM_ID}
-                      on:pointerout={handleRecaptchaResponse}
-                    />
+                  <div class="relative w-full mb-3">
+                    <div id={RECAPTCHA_FORM_ID} />
+                    {#if $errors.recaptcha}
+                      <span
+                        class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded text-red-600 bg-red-200 uppercase last:mr-0 mr-1"
+                      >
+                        <small>{$errors.recaptcha}</small>
+                      </span>
+                    {/if}
                   </div>
                   <div class="text-center mt-6">
                     <button
@@ -189,6 +180,7 @@
                     >
                       Send Message
                     </button>
+                    {JSON.stringify($form)}
                   </div>
                 </div>
               </form>
