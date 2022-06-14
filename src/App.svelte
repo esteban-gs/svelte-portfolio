@@ -3,6 +3,8 @@
   import { Router, Route } from "svelte-routing";
   import ContactUs from "./views/ContactUs.svelte";
   import AuthNavbar from "./components/Navbars/AuthNavbar.svelte";
+  import Outage from "views/public-view/Outage.svelte";
+  import Footer from "components/Footers/Footer.svelte";
 
   // Admin Layout
   // import Admin from "./layouts/Admin.svelte";
@@ -12,7 +14,7 @@
   // No Layout Pages
   import Index from "./views/Index.svelte";
   // import Landing from "./views/Landing.svelte";
-  import Profile from "./views/Profile.svelte";
+  import Portfolio from "./views/Portfolio.svelte";
 
   export let url = "";
 </script>
@@ -25,7 +27,9 @@
   <!-- <Route path="auth/*auth" component="{Auth}" /> -->
   <!-- no layout pages -->
   <!-- <Route path="landing" component="{Landing}" /> -->
-  <Route path="/" component={Profile} />
-  <Route path="/work-with-me" component={ContactUs} />
+  <Route path="/" component={Portfolio} />
+  <Route path="/contact-me" component={ContactUs} />
+  <Route path="/woops" component={Outage} />
   <!-- <Route path="/" component="{Index}" /> -->
 </Router>
+<Footer />

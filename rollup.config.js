@@ -20,6 +20,7 @@ const aliases = alias({
   entries: [
     { find: "components", replacement: "src/components" },
     { find: "parts", replacement: "src/parts" },
+    { find: "stores", replacement: "src/stores" },
     { find: "views", replacement: "src/views" },
     { find: "assets", replacement: "src/assets" },
     { find: "app-configs", replacement: "src/app-configs.js" },
@@ -184,7 +185,7 @@ export default {
     // https://github.com/rollup/plugins/tree/master/packages/commonjs
     resolve({
       browser: true,
-      dedupe: ["svelte"],
+      dedupe: ["svelte", 'svelte/transition', 'svelte/internal'], // important!
     }),
     commonjs(),
 

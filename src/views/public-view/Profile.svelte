@@ -1,11 +1,12 @@
 <script>
   // core components
-  import Footer from "components/Footers/Footer.svelte";
-  import { APP_CMS } from "../app-configs";
+  import { APP_CMS } from "app-configs";
   import axios from "axios";
 
   import { writable } from "svelte/store";
+
   import { onMount } from "svelte";
+  import { navigate } from "svelte-routing";
 
   const authLinks = {
     githubUrl: "",
@@ -20,7 +21,13 @@
   let githubMetrics = [];
 
   onMount(async () => {
-    const profile = (await axios.get(APP_CMS)).data;
+    let { data, status } = await axios.get(APP_CMS);
+    const profile = data;
+    status = 50;
+    if (status !== 200) {
+      console.log("not ok");
+      navigate("/woops", { replace: true });
+    }
 
     profileName.set(profile.profileName);
     profileImg.set(profile.profileImage);
@@ -170,5 +177,4 @@
       </div>
     </section>
   </main>
-  <Footer />
 </div>
