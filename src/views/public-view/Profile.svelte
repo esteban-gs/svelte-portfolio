@@ -4,6 +4,7 @@
   import axios from "axios";
 
   import { writable } from "svelte/store";
+  import { profileStore } from "stores/ProfileStore.js";
 
   import { onMount } from "svelte";
   import { navigate } from "svelte-routing";
@@ -32,6 +33,8 @@
       console.log("not ok");
       navigate("/woops", { replace: true });
     }
+
+    $profileStore = { ...profile };
 
     profileName.set(profile.profileName);
     profileImg.set(profile.profileImage);

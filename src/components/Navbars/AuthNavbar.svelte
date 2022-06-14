@@ -6,6 +6,8 @@
   import PagesDropdown from "components/Dropdowns/PagesDropdown.svelte";
   import { onMount } from "svelte";
 
+  import { profileStore } from "stores/ProfileStore.js";
+
   let navbarOpen = false;
 
   const setNavbarOpen = () => {
@@ -15,13 +17,13 @@
   $: navLinks = [
     {
       id: "gihubLink",
-      link: githubUrl,
+      link: $profileStore.githubUrl,
       icon: "fa-github",
       largeText: "Connect On Github",
     },
     {
       id: "linkedInUrl",
-      link: linkedInUrl,
+      link: $profileStore.linkedInUrl,
       icon: "fa-linkedin",
       largeText: "Connect On LinkedIn",
     },
