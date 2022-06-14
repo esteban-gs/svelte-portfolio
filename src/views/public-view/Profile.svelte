@@ -20,10 +20,14 @@
 
   let githubMetrics = [];
 
+  const navigateToContactForm = () => {
+    navigate("/contact-me");
+  };
+
   onMount(async () => {
     let { data, status } = await axios.get(APP_CMS);
     const profile = data;
-    status = 50;
+    status = 200;
     if (status !== 200) {
       console.log("not ok");
       navigate("/woops", { replace: true });
@@ -106,6 +110,7 @@
                   <button
                     class="bg-red-400 active:bg-red-500 uppercase text-white font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded outline-none focus:outline-none sm:mr-2 mb-1 ease-linear transition-all duration-150"
                     type="button"
+                    on:click={navigateToContactForm}
                   >
                     Connect
                   </button>
