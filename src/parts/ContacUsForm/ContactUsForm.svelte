@@ -3,12 +3,13 @@
     RECAPTCHA_KEY,
     EMAIL_JS_KEY,
     EMAIL_JS_SERVICE_ID,
-    EMAIL_JS_TEMPLATE_ID
+    EMAIL_JS_TEMPLATE_ID,
   } from "app-configs";
   import emailjs from "emailjs";
   import { schema } from "./ContactUsFormValidators";
   import { recaptchaSchema } from "./RecaptchaValidator";
   import { createForm } from "svelte-forms-lib";
+  import { onMount } from "svelte";
 
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
@@ -17,10 +18,13 @@
   let fields = { fullName: "", email: "", message: "", recaptcha: "" };
 
   const renderReCaptcha = () => {
-    widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
-      sitekey: RECAPTCHA_KEY,
-      theme: "dark",
-    });
+    console.log("Attempting to load recaptcha client");
+    if (window.grecaptcha) {
+      widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
+        sitekey: RECAPTCHA_KEY,
+        theme: "dark",
+      });
+    }
   };
 
   const validateRecaptcha = async () => {
@@ -65,6 +69,10 @@
       )
       .then((_) => console.log(_));
   };
+
+  onMount(() => {
+    renderReCaptcha();
+  });
 </script>
 
 <svelte:window on:load={renderReCaptcha} />
