@@ -19,7 +19,8 @@
 
   const renderReCaptcha = () => {
     console.log("Attempting to load recaptcha client");
-    if (window.grecaptcha) {
+    if (window.grecaptcha !== undefined) {
+      console.log("Recaptcha ready to render");
       widget = window.grecaptcha.render(RECAPTCHA_FORM_ID, {
         sitekey: RECAPTCHA_KEY,
         theme: "dark",
