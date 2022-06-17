@@ -83,6 +83,7 @@
   };
 
   const notifySuccess = () => {
+    console.log("success");
     showMessage = true;
     messageConfig.message = "Form submitted!";
     messageConfig.title = "Success";
@@ -90,6 +91,7 @@
   };
 
   const notifyError = () => {
+    console.log("error");
     showMessage = true;
     messageConfig.message = "Unable to submit form";
     messageConfig.title = "Error";
