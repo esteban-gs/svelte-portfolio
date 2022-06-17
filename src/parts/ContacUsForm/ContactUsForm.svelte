@@ -10,12 +10,19 @@
   import { recaptchaSchema } from "./RecaptchaValidator";
   import { createForm } from "svelte-forms-lib";
   import { onMount } from "svelte";
+  import Alert from "components/Alerts/Alert.svelte";
 
   const RECAPTCHA_FORM_ID = "recaptcha-form;";
 
   let widget;
   let recaptchaVerifyResponse = "";
   let fields = { fullName: "", email: "", message: "", recaptcha: "" };
+  let showMessage = false;
+  let messageConfig = {
+    severity: "success",
+    title: "",
+    message: "",
+  };
 
   const renderReCaptcha = () => {
     console.log("Attempting to load recaptcha client");
@@ -47,7 +54,7 @@
     return errs;
   };
 
-  const { form, errors, state, handleChange, handleSubmit } = createForm({
+  const { form, errors, handleChange, handleSubmit } = createForm({
     initialValues: fields,
     validationSchema: schema,
     validate: validateRecaptcha,
@@ -59,16 +66,34 @@
     sendEmailJS(recaptchaVerifyResponse, values);
   };
 
-  const sendEmailJS = (recaptchaToken, values) => {
+  const sendEmailJS = async (recaptchaToken, values) => {
     emailjs.init(EMAIL_JS_KEY);
-    emailjs
-      .send(
-        EMAIL_JS_SERVICE_ID,
-        EMAIL_JS_TEMPLATE_ID,
-        { ...values, "g-recaptcha-response": recaptchaToken },
-        EMAIL_JS_KEY
-      )
-      .then((_) => console.log(_));
+    const emailSendResult = await emailjs.send(
+      EMAIL_JS_SERVICE_ID,
+      EMAIL_JS_TEMPLATE_ID,
+      { ...values, "g-recaptcha-response": recaptchaToken },
+      EMAIL_JS_KEY
+    );
+
+    if (emailSendResult.status === 200) {
+      notifySuccess();
+    } else {
+      notifyError();
+    }
+  };
+
+  const notifySuccess = () => {
+    showMessage = true;
+    messageConfig.message = "Form submitted!";
+    messageConfig.title = "Success";
+    messageConfig.severity = "success";
+  };
+
+  const notifyError = () => {
+    showMessage = true;
+    messageConfig.message = "Unable to submit form";
+    messageConfig.title = "Error";
+    messageConfig.severity = "error";
   };
 
   onMount(() => {
@@ -92,6 +117,11 @@
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
                     Complete this form and I will get back to you in 24 hours.
                   </p>
+                  {#if showMessage}
+                    <span>
+                      <Alert show={showMessage} {...messageConfig} />
+                    </span>
+                  {/if}
                   <div class="relative w-full mb-3 mt-8">
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
