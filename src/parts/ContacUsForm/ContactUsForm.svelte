@@ -17,7 +17,7 @@
   let widget;
   let recaptchaVerifyResponse = "";
   let fields = { fullName: "", email: "", message: "", recaptcha: "" };
-  let showMessage = true;
+  let showMessage = false;
   let messageConfig = {
     severity: "success",
     title: "",
