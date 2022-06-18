@@ -117,9 +117,7 @@
                   <p class="leading-relaxed mt-1 mb-4 text-blueGray-500">
                     Complete this form and I will get back to you in 24 hours.
                   </p>
-                  <span>
-                    <Alert show={showMessage} {...messageConfig} />
-                  </span>
+                  <span />
                   <div class="relative w-full mb-3 mt-8">
                     <label
                       class="block uppercase text-blueGray-600 text-xs font-bold mb-2"
@@ -214,6 +212,7 @@
                     </button>
                   </div>
                 </div>
+                <Alert show={showMessage} {...messageConfig} />
               </form>
             </div>
           </div>
