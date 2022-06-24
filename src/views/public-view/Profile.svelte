@@ -3,6 +3,10 @@
   import { APP_CMS } from "app-configs";
   import axios from "axios";
 
+  import ProfileTitle from "parts/Profile/ProfileTitle.svelte";
+  import ProfileUniversity from "parts/Profile/ProfileUniversity.svelte";
+  import ProfileBio from "parts/Profile/ProfileBio.svelte";
+
   import { writable } from "svelte/store";
   import { profileStore } from "stores/ProfileStore.js";
 
@@ -18,6 +22,10 @@
   const profileImg = writable("");
   const profileLocation = writable("");
   const profileBackgroundImg = writable("");
+  const profileTitle = writable("");
+  const profileBio = writable("");
+  const profileEducation = writable("");
+  const profileUniversity = writable("");
 
   let githubMetrics = [];
 
@@ -40,6 +48,10 @@
     profileImg.set(profile.profileImage);
     profileLocation.set(profile.location);
     profileBackgroundImg.set(profile.profileBackgroundImg);
+    profileTitle.set(profile.profileTitle);
+    profileBio.set(profile.profileBio);
+    profileEducation.set(profile.profileEducation);
+    profileUniversity.set(profile.profileUniversity);
 
     authLinks.githubUrl = profile.githubUrl;
     authLinks.linkedInUrl = profile.linkedInUrl;
@@ -53,7 +65,6 @@
     ];
   });
 
-  export let location;
 </script>
 
 <div>
@@ -151,35 +162,16 @@
                 />
                 {$profileLocation}
               </div>
-              <div class="mb-2 text-blueGray-600 mt-10">
-                <i class="fas fa-briefcase mr-2 text-lg text-blueGray-400" />
-                Solution Manager - Creative Tim Officer
-              </div>
-              <div class="mb-2 text-blueGray-600">
-                <i class="fas fa-university mr-2 text-lg text-blueGray-400" />
-                University of Computer Science
-              </div>
+
+              <ProfileTitle
+                title={$profileTitle}
+                education={$profileEducation}
+              />
+
+              <ProfileUniversity university={$profileEducation} />
             </div>
-            <div class="mt-10 py-10 border-t border-blueGray-200 text-center">
-              <div class="flex flex-wrap justify-center">
-                <div class="w-full lg:w-9/12 px-4">
-                  <p class="mb-4 text-lg leading-relaxed text-blueGray-700">
-                    An artist of considerable range, Jenna the name taken by
-                    Melbourne-raised, Brooklyn-based Nick Murphy writes,
-                    performs and records all of his own music, giving it a warm,
-                    intimate feel with a solid groove structure. An artist of
-                    considerable range.
-                  </p>
-                  <a
-                    href="#pablo"
-                    on:click={(e) => e.preventDefault()}
-                    class="font-normal text-red-500"
-                  >
-                    Show more
-                  </a>
-                </div>
-              </div>
-            </div>
+
+            <ProfileBio bio={$profileBio} />
           </div>
         </div>
       </div>

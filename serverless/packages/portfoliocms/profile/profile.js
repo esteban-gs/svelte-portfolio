@@ -1,4 +1,5 @@
-require("dotenv").config({ path: "../../../" });
+// doctl sandbox deploy ./serverless --env ./serverless/.env
+require("dotenv").config({ path: "../../../.env" });
 const { Octokit } = require("@octokit/core");
 
 exports.main = async (args) => {
@@ -22,6 +23,10 @@ exports.main = async (args) => {
       followers: githubprofile.followers,
       following: githubprofile.following,
     },
+    profileTitle: process.env.PROFILE_TITLE,
+    profileEducation: process.env.PROFILE_EDUCATION,
+    profileUniversity: process.env.PROFILE_UNIVERSITY,
+    profileBio: process.env.PROFILE_BIO
   };
   return { body: content };
 };
